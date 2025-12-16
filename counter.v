@@ -1,14 +1,25 @@
 `timescale 1ns/1ps
-module counter(count,rst,clk,m);
-input rst,clk,m;
-output reg [3:0]count;
-always@(posedge (clk) or negedge (rst))
+module counter_tb; 
+reg clk,rst,m;
+wire [3:0] count;
+counter d (count,rst,clk,m);
+initial
 begin
-if(!rst)
-count=0;
-else if(m)
-count=count+1;
-else
-count=count-1;
+clk=0;
+rst=0;
+#25;
+rst=1;
 end
-endmodule			
+initial
+begin
+m=1;
+#600 m=0;
+rst=0;
+#25;
+rst=1;
+#500 m=0;
+end
+always #5 clk=~clk;
+initial
+#1400 $finish;
+endmodule
